@@ -3,7 +3,7 @@
     "name": "qr-barcode-generator",
     "builds": [
         {
-            "src": "*.html",
+            "src": "index.html",
             "use": "@vercel/static"
         }
     ],
