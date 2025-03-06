@@ -1,0 +1,19 @@
+{
+    "version": 2,
+    "name": "qr-barcode-generator",
+    "builds": [
+        {
+            "src": "*.html",
+            "use": "@vercel/static"
+        }
+    ],
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "/index.html"
+        }
+    ],
+    "github": {
+        "silent": true
+    }
+}

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code & Barcode Generator/Scanner</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <!-- QR Code library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- Barcode library -->
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    <!-- QR Code Scanner library -->
+    <script src="https://unpkg.com/html5-qrcode"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">QR & Barcode Tool</div>
+        <button id="burger-menu" class="burger-menu" aria-label="Toggle menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <div class="nav-controls">
+            <button id="share-btn" class="icon-btn" title="Share">
+                <i class="fas fa-share-alt"></i>
+                <span class="btn-text">Share</span>
+            </button>
+            <button id="help-btn" class="icon-btn" title="Help & Support">
+                <i class="fas fa-question-circle"></i>
+                <span class="btn-text">Help & Support</span>
+            </button>
+            <div class="settings-container">
+                <button id="settings-btn" class="icon-btn" title="Settings">
+                    <i class="fas fa-cog"></i>
+                    <span class="btn-text">Settings</span>
+                </button>
+                <div class="settings-menu hidden">
+                    <button class="menu-item" data-action="new-tab">
+                        <i class="fas fa-plus"></i>
+                        New Tab
+                    </button>
+                    <button class="menu-item" data-action="history">
+                        <i class="fas fa-history"></i>
+                        History
+                    </button>
+                    <button class="menu-item" data-action="saved-codes">
+                        <i class="fas fa-qrcode"></i>
+                        Saved Codes
+                    </button>
+                    <div class="theme-toggle">
+                        <span>Theme</span>
+                        <button id="theme-btn">
+                            <i class="fas fa-sun"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Share Modal -->
+    <div id="share-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Share</h2>
+                <button class="close-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="share-options">
+                    <button class="share-btn" data-platform="whatsapp">
+                        <i class="fab fa-whatsapp"></i>
+                        WhatsApp
+                    </button>
+                    <button class="share-btn" data-platform="facebook">
+                        <i class="fab fa-facebook"></i>
+                        Facebook
+                    </button>
+                    <button class="share-btn" data-platform="twitter">
+                        <i class="fab fa-twitter"></i>
+                        Twitter
+                    </button>
+                    <button class="share-btn" data-platform="email">
+                        <i class="fas fa-envelope"></i>
+                        Email
+                    </button>
+                    <button class="share-btn" data-platform="copy">
+                        <i class="fas fa-link"></i>
+                        Copy Link
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Help Modal -->
+    <div id="help-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Help & Support</h2>
+                <button class="close-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="help-sections">
+                    <div class="help-section">
+                        <h3><i class="fas fa-qrcode"></i> Generate QR Code</h3>
+                        <p>1. Enter text or URL in the input field</p>
+                        <p>2. Select "QR Code" type</p>
+                        <p>3. Click "Generate" button</p>
+                        <p>4. Download or save the generated QR code</p>
+                    </div>
+                    <div class="help-section">
+                        <h3><i class="fas fa-barcode"></i> Generate Barcode</h3>
+                        <p>1. Enter text in the input field</p>
+                        <p>2. Select "Barcode" type</p>
+                        <p>3. Click "Generate" button</p>
+                        <p>4. Download or save the generated barcode</p>
+                    </div>
+                    <div class="help-section">
+                        <h3><i class="fas fa-camera"></i> Scan Codes</h3>
+                        <p>1. Click the "Scan" tab</p>
+                        <p>2. Allow camera access when prompted</p>
+                        <p>3. Point your camera at a QR code or barcode</p>
+                        <p>4. The result will appear automatically</p>
+                    </div>
+                    <div class="help-section">
+                        <h3><i class="fas fa-envelope"></i> Contact Support</h3>
+                        <div class="contact-support">
+                            <a href="mailto:support@qrbarcode.com" class="support-btn">
+                                <i class="fas fa-envelope"></i>
+                                Email Support
+                            </a>
+                            <a href="https://wa.me/1234567890" target="_blank" class="support-btn">
+                                <i class="fab fa-whatsapp"></i>
+                                WhatsApp Support
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- History Modal -->
+    <div id="history-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>History</h2>
+                <button class="close-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div id="history-list" class="history-list">
+                    <!-- History items will be added here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Saved Codes Modal -->
+    <div id="saved-codes-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Saved Codes</h2>
+                <button class="close-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div id="saved-codes-list" class="saved-codes-list">
+                    <!-- Saved codes will be added here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>QR Code & Barcode Generator/Scanner</h1>
+        
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="generate">Generate</button>
+            <button class="tab-btn" data-tab="scan">Scan</button>
+        </div>
+
+        <div class="tab-content" id="generate">
+            <div class="input-section">
+                <input type="text" id="text-input" placeholder="Enter text or URL">
+                <div class="type-selector">
+                    <button class="type-btn active" data-type="qr">QR Code</button>
+                    <button class="type-btn" data-type="barcode">Barcode</button>
+                </div>
+                <button id="generate-btn">Generate</button>
+            </div>
+            
+            <div class="result-section">
+                <div id="qr-container"></div>
+                <svg id="barcode"></svg>
+                <div class="action-buttons">
+                    <button id="download-btn" class="hidden">Download</button>
+                    <button id="save-btn" class="hidden">Save</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content hidden" id="scan">
+            <div class="scanner-section">
+                <div class="scan-options">
+                    <button id="camera-scan-btn" class="scan-option-btn active">
+                        <i class="fas fa-camera"></i>
+                        Camera Scan
+                    </button>
+                    <button id="file-scan-btn" class="scan-option-btn">
+                        <i class="fas fa-file-upload"></i>
+                        Upload Image
+                    </button>
+                </div>
+
+                <div id="reader"></div>
+                <div id="file-upload-container" class="hidden">
+                    <div class="upload-area" id="upload-area">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Drag & Drop image here or</p>
+                        <label for="file-input" class="upload-btn">Browse Files</label>
+                        <input type="file" id="file-input" accept="image/*" hidden>
+                    </div>
+                    <div id="scan-result"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
