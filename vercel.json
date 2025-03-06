@@ -4,6 +4,9 @@
     "builds": [
         {
             "src": "index.html",
+            "src": "style.css",
+            "src": "script.js",
+            "use": "@vercel/static"
             
         }
     ],
